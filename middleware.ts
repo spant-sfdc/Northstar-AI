@@ -1,15 +1,20 @@
 import { NextResponse, type NextRequest } from "next/server"
 import { createServerClient } from "@supabase/ssr"
 
-// Refreshes the Supabase session on every navigable request so access tokens
-// never silently expire mid-session.
 export async function middleware(request: NextRequest) {
-  let response = NextResponse.next({ request })
+  const supabaseUrl  = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const supabaseAnon = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
+  // If env vars are absent (e.g. missing from Vercel build), pass through
+  // rather than crashing the entire Edge middleware invocation.
+  if (!supabaseUrl || !supabaseAnon) {
+    return NextResponse.next()
+  }
+
+  try {
+    let response = NextResponse.next({ request })
+
+    const supabase = createServerClient(supabaseUrl, supabaseAnon, {
       cookies: {
         getAll() {
           return request.cookies.getAll()
@@ -22,18 +27,21 @@ export async function middleware(request: NextRequest) {
           )
         },
       },
-    }
-  )
+    })
 
-  // Do not remove — keeps the session alive without blocking the response
-  await supabase.auth.getUser()
+    // Refreshes the session token so it never silently expires mid-session.
+    await supabase.auth.getUser()
 
-  return response
+    return response
+  } catch {
+    // Never crash the middleware — fail open so pages still render.
+    // Auth is enforced server-side in each protected layout/page.
+    return NextResponse.next()
+  }
 }
 
 export const config = {
   matcher: [
-    // Skip Next.js internals and static files; match everything else
     "/((?!_next/static|_next/image|favicon\\.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
 }
