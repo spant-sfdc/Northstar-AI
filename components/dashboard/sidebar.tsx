@@ -14,10 +14,10 @@ import {
 import { cn } from "@/lib/utils"
 
 const NAV_ITEMS = [
-  { href: "/dashboard",   label: "Dashboard",  icon: LayoutDashboard, active: true  },
-  { href: "/roadmap",     label: "Roadmap",    icon: Map,             active: false },
-  { href: "/milestones",  label: "Milestones", icon: CheckSquare,     active: false },
-  { href: "/skills",      label: "Skills",     icon: Zap,             active: false },
+  { href: "/dashboard",  label: "Dashboard",  icon: LayoutDashboard, active: true },
+  { href: "/roadmap",    label: "Roadmap",    icon: Map,             active: true },
+  { href: "/milestones", label: "Milestones", icon: CheckSquare,     active: true },
+  { href: "/skills",     label: "Skills",     icon: Zap,             active: true },
 ]
 
 interface SidebarProps {
@@ -35,7 +35,7 @@ export function Sidebar({ userName, userEmail, trialDaysLeft }: SidebarProps) {
       {/* Logo */}
       <div className="px-5 py-5 border-b border-slate-100">
         <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-lg bg-indigo-600 flex items-center justify-center flex-shrink-0">
+          <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-blue-600 to-cyan-500 flex items-center justify-center flex-shrink-0">
             <Star className="w-3.5 h-3.5 text-white fill-white" />
           </div>
           <span className="text-[14px] font-bold text-slate-900 tracking-tight">SkillSynq</span>
