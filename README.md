@@ -1,36 +1,92 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SkillSynq
 
-## Getting Started
+AI-native career intelligence for tech professionals. By TechPulse Solutions.
 
-First, run the development server:
+## What it does
+
+SkillSynq benchmarks your expertise against real market requirements for your target role, identifies exactly which skills to build, and generates a personalized week-by-week learning path — so every hour of learning moves your career forward.
+
+## Stack
+
+- **Framework**: Next.js 16 (App Router)
+- **Language**: TypeScript (strict)
+- **Styling**: Tailwind CSS v4 + shadcn/ui (radix-nova)
+- **Animation**: Framer Motion
+- **Database**: Supabase (PostgreSQL + Storage)
+- **Auth**: Supabase Auth
+- **AI**: OpenAI GPT-4o
+- **Payments**: Razorpay
+- **Deployment**: Vercel
+
+## Getting started
 
 ```bash
+# Install dependencies
+npm install
+
+# Set up environment variables
+cp .env.local .env.local   # fill in the values
+# or create .env.local manually — see the file for required keys
+
+# Start development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Environment variables
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Variable | Where to get it |
+|---|---|
+| `NEXT_PUBLIC_SUPABASE_URL` | Supabase dashboard → Project Settings → API |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase dashboard → Project Settings → API |
+| `SUPABASE_SERVICE_ROLE_KEY` | Supabase dashboard → Project Settings → API |
+| `OPENAI_API_KEY` | platform.openai.com/api-keys |
+| `NEXT_PUBLIC_RAZORPAY_KEY_ID` | Razorpay dashboard → API Keys |
+| `RAZORPAY_KEY_ID` | Razorpay dashboard → API Keys |
+| `RAZORPAY_KEY_SECRET` | Razorpay dashboard → API Keys |
+| `RAZORPAY_WEBHOOK_SECRET` | Razorpay dashboard → Webhooks |
+| `RAZORPAY_PLAN_PREMIUM` | Razorpay dashboard → Subscriptions → Plans |
+| `RAZORPAY_PLAN_ADVANCED` | Razorpay dashboard → Subscriptions → Plans |
+| `NEXT_PUBLIC_APP_URL` | `http://localhost:3000` (local) / `https://skillsynq.co.in` (prod) |
 
-## Learn More
+**Rule**: Variables without `NEXT_PUBLIC_` prefix are server-only. Never expose `SUPABASE_SERVICE_ROLE_KEY`, `OPENAI_API_KEY`, or `RAZORPAY_KEY_SECRET` to the client.
 
-To learn more about Next.js, take a look at the following resources:
+## Project structure
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+app/
+├── (marketing)/        # Public landing page — no auth required
+├── (auth)/             # Login, signup, callback — Phase 3
+├── (dashboard)/        # Protected app routes — Phase 3
+└── api/                # API route handlers — Phase 4+
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+components/
+├── marketing/          # Landing page section components
+└── ui/                 # shadcn primitives (auto-generated, don't edit)
 
-## Deploy on Vercel
+lib/
+└── utils.ts            # cn() utility
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+hooks/                  # Custom React hooks — Phase 3+
+stores/                 # Zustand state stores — Phase 3+
+types/                  # TypeScript type definitions — Phase 3+
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Scripts
+
+```bash
+npm run dev     # Development server
+npm run build   # Production build (run before deploying)
+npm run start   # Start production server locally
+npm run lint    # ESLint
+```
+
+## Development phases
+
+- **Phase 1** ✅ Project scaffold, dependencies, folder structure
+- **Phase 2** ✅ Landing page — 9 sections, dashboard mock, brand system
+- **Phase 3** 🔜 Authentication + onboarding wizard (Supabase Auth)
+- **Phase 4** — AI readiness analysis + roadmap generation (OpenAI)
+- **Phase 5** — Dashboard, milestones, progress tracking
+- **Phase 6** — Razorpay billing (free + premium + advanced tiers)
